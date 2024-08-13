@@ -28,6 +28,7 @@ def callback():
 def create_playlist():
     sp = get_spotify_client()
     track_ids = []
+    print(f"Track IDs: {track_ids}")
     clusters = cluster_tracks(sp, track_ids)
     playlist_urls = create_mood_playlists(sp, track_ids, clusters)
     return render_template('create_playlist.html', playlist_urls=playlist_urls)

@@ -2,14 +2,29 @@ from sklearn.cluster import KMeans
 import numpy as np
 
 def get_audio_features(sp, track_ids):
-    features = sp.audio_features(tracks=track_ids)
-    return np.array([[f['danceability'], f['energy'], f['valence']] for f in features])
+    try: 
+        features = sp.audio_features(tracks=track_ids)
+        print(f"Fetched audio features: {features}")
+        if features is None:
+            print(f"No audio features found for track IDs: {track_ids}")
+            return np.array([])
+        return np.array([[f['danceability'], f['energy'], f['valence']] for f in features])
+    except Exception as e:
+        print(f"Error fetching audio features: {e}")
+        return np.array([])
 
 def cluster_tracks(sp, track_ids, n_clusters=3):
     features = get_audio_features(sp, track_ids)
-    kmeans = KMeans(n_clusters=n_clusters)
-    clusters = kmeans.fit_predict(features)
-    return clusters
+    if features.size == 0:
+        print("No features available for clustering.")
+        return None
+    try:
+        kmeans = KMeans(n_clusters=n_clusters)
+        clusters = kmeans.fit_predict(features)
+        return clusters
+    except Exception as e:
+        print(f"Error during clustering: {e}")
+        return None
 
 def create_mood_playlists(sp, track_ids, clusters, n_clusters=3):
     playlists = []
