@@ -27,11 +27,33 @@ def callback():
 @app.route('/create_playlist')
 def create_playlist():
     sp = get_spotify_client()
-    track_ids = []
-    print(f"Track IDs: {track_ids}")
+    if not sp:
+        return redirect(url_for('index'))
+    
+    track_ids = fetch_track_ids(sp)
+    if not track_ids:
+        return "No tracks found. Please save some tracks to your library."
+    
     clusters = cluster_tracks(sp, track_ids)
-    playlist_urls = create_mood_playlists(sp, track_ids, clusters)
+    if clusters is not None:
+        playlist_urls = create_mood_playlists(sp, track_ids, clusters)
+    else:
+        playlist_urls = []
     return render_template('create_playlist.html', playlist_urls=playlist_urls)
+
+def fetch_track_ids(sp):
+    track_ids = []
+    try:
+        results = sp.current_user_saved_tracks()
+        for item in results['items']:
+            track_ids.append(item['track']['id'])
+        while results['next']:
+            results = sp.next(results)
+            for item in results['items']:
+                track_ids.append(item['track']['id'])
+    except Exception as e:
+        print(f"Error fetching track IDs: {e}")
+    return track_ids
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -31,9 +31,16 @@ def create_mood_playlists(sp, track_ids, clusters, n_clusters=3):
     user_id = sp.current_user()['id']
 
     for i in range(n_clusters):
-        mood_tracks = [track_ids[j] for j in range (len(track_ids)) if clusters[j] == i]
-        playlist = sp.user_playlists_create(user_id, f"Mood {i+1} Playlist")
-        sp.user_playlist_add_tracks(user_id, playlist['id'], mood_tracks)
-        playlists.append(playlist['external_urls']['spotify'])
+        try: 
+            playlist_name = f"Mood {i+1} Playlist"
+            playlist = sp.user_playlist_create(user_id, playlist_name)
+            playlist_id = playlist['id']
+            playlists.append(f"https://open.spotify.com/playlist/{playlist_id}")
+            
+            cluster_tracks = [track_ids[j] for j in range(len(track_ids)) if clusters[j] == i]
+            if cluster_tracks:
+                sp.user_playlist_add_tracks(user_id, playlist_id, clusters)
+        except Exception as e:
+            print(f"Error creating playlist {i+1}: {e}")
 
     return playlists
