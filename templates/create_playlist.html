@@ -3,14 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playlist Created</title>
+    <title>Create Playlist</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Your Mood-Based Playlists</h1>
-    <ul>
-        {% for url in playlist_urls %}
-        <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>My Mood Playlists</h1>
+        <a href="{{ url_for('index') }}" class="button">Home</a>
+    </header>
+    <main>
+        <section class="playlist-container">
+            {% if playlist_urls %}
+                {% for url in playlist_urls %}
+                    <div class="card">
+                        <img src="https://via.placeholder.com/300x300?text=Playlist" alt="Playlist Image">
+                        <div class="card-content">
+                            <h2>Playlist</h2>
+                            <a href="{{ url }}" target="_blank" class="button">Open Playlist</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No playlists created yet.</p>
+            {% endif %}
+        </section>
+    </main>
 </body>
 </html>

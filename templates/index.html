@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood-Based Playlist Creator</title>
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Welcome to the Mood-Based Playlist Creator</h1>
-    <a href="{{ url_for('login') }}">Login with Spotify</a>
+    <header>
+        <h1>Welcome to Spotify Mood Playlist Creator</h1>
+    </header>
+    <main>
+        <section class="form-container">
+            <div class="form-content">
+                <h2>Welcome to the Mood Playlist Creator</h2>
+                <p>Please log in to start creating your mood-based playlists.</p>
+                <a href="{{ url_for('login') }}" class="button">Login with Spotify</a>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
